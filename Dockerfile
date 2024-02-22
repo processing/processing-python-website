@@ -6,29 +6,29 @@ deb http://archive.debian.org/debian-security stretch/updates main" > /etc/apt/s
 
 # Disable the check for valid signatures on the archived repositories
 # as the archived keys may not be up to date
-RUN apt-get -o Acquire::Check-Valid-Until=false update
-
-# Install Python 2.7, pip, OpenJDK 8, libxml2-dev, libxslt-dev, and zlib1g-dev
-RUN apt-get install -y --allow-unauthenticated \
+RUN apt-get -o Acquire::Check-Valid-Until=false update && apt-get install -y --allow-unauthenticated \
     python2.7 \
     python-pip \
     openjdk-8-jdk \
     libxml2-dev \
     libxslt-dev \
     zlib1g-dev \
-&& apt-get clean \
-# Check if the python symlink exists and if it does, check if it points to python2.7
-# If it doesn't exist or it points to a different version of python, create the symlink
-&& ( [ ! -e /usr/bin/python ] || [ "$(readlink -f /usr/bin/python)" != "$(which python2.7)" ] ) && ln -sf $(which python2.7) /usr/bin/python || true
+&& apt-get clean
+
+# Create a symbolic link for python if it doesn't exist or points to a different version
+RUN if [ ! -e /usr/bin/python ] || [ "$(readlink -f /usr/bin/python)" != "$(which python2.7)" ]; then ln -sf $(which python2.7) /usr/bin/python; fi
 
 # Set the working directory in the container
 WORKDIR /usr/src/app
 
-# Copy the current directory contents into the container at /usr/src/app
-COPY . .
+# Copy only the requirements.txt initially to leverage Docker cache
+COPY requirements.txt ./
 
-# Install Jinja2 and lxml using pip
-RUN pip install --trusted-host pypi.python.org Jinja2 lxml
+# Install Python dependencies
+RUN pip install --no-cache-dir --trusted-host pypi.python.org -r requirements.txt
+
+# Copy the rest of your application code
+COPY . .
 
 # Make port 80 available to the world outside this container
 EXPOSE 80
