@@ -104,6 +104,45 @@ To test the site in a local server:
 
     python generator.py test
 
+### Building with Docker
+Using Docker, you can have a complete, consistent development environment without having to manually install dependencies and set up your environment. It also helps isolate these dependencies and their data from other projects that you may have on the same computer that use different/conflicting versions, etc.
+
+Note that this takes up a significant amount of space on your machine. Make sure you have at least 5GB free.
+
+#### Included files
+
+Two files are included that are used by Docker to configure the environment, build, and serve the site. These files are pre-configured, and you typically won't need to edit them:
+
+* The `Dockerfile` contains instructions to set up the development environment.
+
+* The `docker-compose.yml` file defines three services to manage the application lifecycle:
+  * `app`: A base service that keeps the container running indefinitely. It's useful for debugging or running arbitrary commands within the container.
+  * `build`: A service that runs the generator.py script to build the static site.
+  * `serve`: A service that serves the generated site using Python's built-in HTTP server.
+
+#### Step 1: Setting up
+1.Install Docker for your operating system
+   * [Mac](https://www.docker.com/docker-mac)
+   * [Windows](https://www.docker.com/docker-windows)
+2. Install [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+3. Clone this repository and `cd` into it
+4. Build the Docker Image: `docker build -t processing-py-site .` This command creates a Docker image named processing-py-site, based on the instructions in the `Dockerfile` present in the repository.
+
+#### Step 2: Building the static site
+
+To build the static site using Docker Compose, run the following command from the root of your project:
+
+`docker-compose run --rm build`
+
+This command starts a Docker container using the configuration from the `build` service, which executes the `generator.py` script to generate the static site. The `--rm` flag ensures the container is removed after the script finishes.
+
+#### Step 3: Serving the Site Locally
+After building the site, you can serve it locally by running:
+
+`docker-compose up serve`
+
+This command starts a Docker container that serves the generated static site on port 8080, as specified in the `serve` service. You can view the site by navigating to `http://localhost:8080` in a web browser.
+
 ## Troubleshooting
 
 Here are a few common and/or possible scenarios you might run into...
