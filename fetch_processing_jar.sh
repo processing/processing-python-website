@@ -21,7 +21,7 @@ ARCH=$(uname -m)
 URL=""
 
 if [ "$OS" == "Linux" ]; then
-    if [ "$ARCH" == "x86_64" ] || [ "$ARCH" == "aarch64" ]; then
+    if [ "$ARCH" == "x86_64" ]; then
         URL="$URL_LINUX64"
     elif [ "$ARCH" == "i386" ] || [ "$ARCH" == "i686" ]; then
         URL="$URL_LINUX32"

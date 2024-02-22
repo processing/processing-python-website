@@ -6,11 +6,13 @@ services:
       context: .
       dockerfile: Dockerfile
     image: processing-py-site
+    platform: linux/amd64
     volumes:
       - .:/usr/src/app
 
   fetch-jar:
     image: processing-py-site
+    platform: linux/amd64
     volumes:
       - .:/usr/src/app
     command: >
