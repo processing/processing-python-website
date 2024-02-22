@@ -109,39 +109,40 @@ Using Docker, you can have a complete, consistent development environment withou
 
 Note that this takes up a significant amount of space on your machine. Make sure you have at least 5GB free.
 
-#### Included files
+#### Included Files
 
-Two files are included that are used by Docker to configure the environment, build, and serve the site. These files are pre-configured, and you typically won't need to edit them:
+Two files are included for Docker configuration:
 
-* The `Dockerfile` contains instructions to set up the development environment.
+- **`Dockerfile`**: Contains instructions for setting up the Docker environment.
+- **`docker-compose.yml`**: Defines services for managing the application lifecycle:
+  - `app`: Keeps the container running indefinitely, useful for debugging or running arbitrary commands.
+  - `fetch-jar`: Automatically downloads the appropriate Processing.py JAR file for image generation.
+  - `build-site`: Builds the static site without images.
+  - `build-all`: Builds the static site including images.
+  - `serve`: Serves the generated site using Python's built-in HTTP server on port 8080.
 
-* The `docker-compose.yml` file defines three services to manage the application lifecycle:
-  * `app`: A base service that keeps the container running indefinitely. It's useful for debugging or running arbitrary commands within the container.
-  * `build`: A service that runs the generator.py script to build the static site.
-  * `serve`: A service that serves the generated site using Python's built-in HTTP server.
+#### Setup Instructions
 
-#### Step 1: Setting up
-1.Install Docker for your operating system
-   * [Mac](https://www.docker.com/docker-mac)
-   * [Windows](https://www.docker.com/docker-windows)
-2. Install [Docker Desktop](https://www.docker.com/products/docker-desktop/)
-3. Clone this repository and `cd` into it
-4. Build the Docker Image: `docker build -t processing-py-site .` This command creates a Docker image named processing-py-site, based on the instructions in the `Dockerfile` present in the repository.
+1. **Install Docker**:
+   - For Mac: [Docker for Mac](https://www.docker.com/docker-mac)
+   - For Windows: [Docker for Windows](https://www.docker.com/docker-windows)
+   - Ensure [Docker Desktop](https://www.docker.com/products/docker-desktop/) is installed and running.
+2. **Prepare the Project**:
+   - Clone this repository and navigate into the project directory.
+   - Build the Docker image: `docker build -t processing-py-site .`. This command creates a Docker image named `processing-py-site`, based on the `Dockerfile`.
 
-#### Step 2: Building the static site
+#### Building the Static Site
 
-To build the static site using Docker Compose, run the following command from the root of your project:
+- **Fetch Processing.py JAR** (if needed): 
+  - Run `docker-compose run --rm fetch-jar` to automatically download the correct Processing.py JAR file for your architecture.
+- **Build the Site**: 
+  - Execute `docker-compose run --rm build-all` to build the entire site, including images. Use `docker-compose run --rm build-site` to build without images.
+  - The `--rm` flag ensures the container is removed after completion.
 
-`docker-compose run --rm build`
+#### Serving the Site Locally
 
-This command starts a Docker container using the configuration from the `build` service, which executes the `generator.py` script to generate the static site. The `--rm` flag ensures the container is removed after the script finishes.
-
-#### Step 3: Serving the Site Locally
-After building the site, you can serve it locally by running:
-
-`docker-compose up serve`
-
-This command starts a Docker container that serves the generated static site on port 8080, as specified in the `serve` service. You can view the site by navigating to `http://localhost:8080` in a web browser.
+- Start the server with `docker-compose up serve`. This serves the site on `http://localhost:8080`.
+- Access the site via your web browser.
 
 ## Troubleshooting
 
