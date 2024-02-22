@@ -18,16 +18,19 @@ services:
     command: >
       sh -c "./fetch_processing_jar.sh"
 
-  build-site:
+  site-build:
     image: processing-py-site
+    platform: linux/amd64
     command: python generator.py build
 
-  build-all:
+  site-build-all:
     image: processing-py-site
+    platform: linux/amd64
     command: python generator.py build --all --images
 
-  serve:
+  site-serve:
     image: processing-py-site
+    platform: linux/amd64
     volumes:
       - ./generated:/usr/src/app/generated
     ports:
