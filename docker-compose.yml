@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    image: processing-py-site
+    volumes:
+      - .:/usr/src/app
+      - ./generated:/usr/src/app/generated
+    command: tail -f /dev/null
+
+  build:
+    image: processing-py-site
+    volumes:
+      - .:/usr/src/app
+      - ./generated:/usr/src/app/generated
+    command: python generator.py build --all --images
+
+  serve:
+    image: processing-py-site
+    volumes:
+      - ./generated:/usr/src/app/generated
+    ports:
+      - "8080:80"
+    command: sh -c "cd generated && python -m SimpleHTTPServer 80"
