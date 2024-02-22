@@ -223,6 +223,12 @@ def generate_images(items_dict, to_update, src_dir, processing_py_jar,
     base_cmd = [javabin, "-cp", processing_py_jar, "org.python.util.jython",
             generate_img_script, '--todo']
 
+    # Check that the processing-py.jar exists and is readable
+    processing_py_jar_path = os.path.join(src_dir, 'processing-py.jar')
+    print("Checking processing-py.jar at:", processing_py_jar_path)
+    print("Exists:", os.path.exists(processing_py_jar_path))
+    print("Permissions:", oct(os.stat(processing_py_jar_path).st_mode)[-3:])
+
     # TODO: use the multiprocessing module's Pool class to run multiple
     # instances of this at once
     generated, failed = image_worker(base_cmd, workitems) 
