@@ -2,18 +2,26 @@ version: '3.8'
 
 services:
   app:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
     image: processing-py-site
     volumes:
       - .:/usr/src/app
-      - ./generated:/usr/src/app/generated
-    command: tail -f /dev/null
 
-  build:
+  fetch-jar:
     image: processing-py-site
     volumes:
       - .:/usr/src/app
-      - ./generated:/usr/src/app/generated
+    command: >
+      sh -c "./fetch_processing_jar.sh"
+
+  build-site:
+    image: processing-py-site
+    command: python generator.py build
+
+  build-all:
+    image: processing-py-site
     command: python generator.py build --all --images
 
   serve:

@@ -7,6 +7,8 @@ deb http://archive.debian.org/debian-security stretch/updates main" > /etc/apt/s
 # Disable the check for valid signatures on the archived repositories
 # as the archived keys may not be up to date
 RUN apt-get -o Acquire::Check-Valid-Until=false update && apt-get install -y --allow-unauthenticated \
+    wget \
+    tar \
     python2.7 \
     python-pip \
     openjdk-8-jdk \

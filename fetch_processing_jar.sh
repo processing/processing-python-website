@@ -1,11 +1,11 @@
 #!/bin/bash
 
 # Define global constants for URLs
-URL_LINUX64="http://py.processing.org/processing.py-linux64.tgz"
-URL_LINUX32="http://py.processing.org/processing.py-linux32.tgz"
-URL_MAC="http://py.processing.org/processing.py-macosx.tgz"
-URL_WINDOWS64="http://py.processing.org/processing.py-windows64.zip"
-URL_WINDOWS32="http://py.processing.org/processing.py-windows32.zip"
+URL_LINUX64="https://py.processing.org/processing.py-linux64.tgz" 
+URL_LINUX32="https://py.processing.org/processing.py-linux32.tgz"
+URL_MAC="https://py.processing.org/processing.py-macosx.tgz"
+URL_WINDOWS64="https://py.processing.org/processing.py-windows64.zip"
+URL_WINDOWS32="https://py.processing.org/processing.py-windows32.zip"
 
 # Detect the operating system
 OS="unknown"
@@ -21,7 +21,7 @@ ARCH=$(uname -m)
 URL=""
 
 if [ "$OS" == "Linux" ]; then
-    if [ "$ARCH" == "x86_64" ]; then
+    if [ "$ARCH" == "x86_64" ] || [ "$ARCH" == "aarch64" ]; then
         URL="$URL_LINUX64"
     elif [ "$ARCH" == "i386" ] || [ "$ARCH" == "i686" ]; then
         URL="$URL_LINUX32"
