@@ -19,7 +19,7 @@ import jinja2
 import lxml.html
 from lxml import etree # We need to use lxml because it can handle CDATA tags
 
-src_dir='.'
+src_dir = os.path.dirname(os.path.realpath(__file__))
 target_dir=os.path.join(src_dir, 'generated/')
 
 # Names to use in links
@@ -225,6 +225,7 @@ def generate_images(items_dict, to_update, src_dir, processing_py_jar,
 
     # Check that the processing-py.jar exists and is readable
     processing_py_jar_path = os.path.join(src_dir, 'processing-py.jar')
+    print("Current working directory:", os.getcwd())
     print("Checking processing-py.jar at:", processing_py_jar_path)
     print("Exists:", os.path.exists(processing_py_jar_path))
     print("Permissions:", oct(os.stat(processing_py_jar_path).st_mode)[-3:])
