@@ -47,3 +47,6 @@ fi
 
 echo "Downloading Processing.py for $OS ($ARCH)"
 wget -O processing.py-archive "$URL" && tar -xvzf processing.py-archive -C "$TARGET_DIR"
+
+echo "Listing contents of $TARGET_DIR:"
+ls -l "$TARGET_DIR"
