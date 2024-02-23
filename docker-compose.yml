@@ -6,13 +6,11 @@ services:
       context: .
       dockerfile: Dockerfile
     image: processing-py-site
-    platform: linux/amd64
     volumes:
       - .:/usr/src/app
 
   fetch-jar:
     image: processing-py-site
-    platform: linux/amd64
     volumes:
       - .:/usr/src/app
     command: >
@@ -20,17 +18,14 @@ services:
 
   site-build:
     image: processing-py-site
-    platform: linux/amd64
     command: python generator.py build
 
   site-build-all:
     image: processing-py-site
-    platform: linux/amd64
     command: python generator.py build --all --images
 
   site-serve:
     image: processing-py-site
-    platform: linux/amd64
     volumes:
       - ./generated:/usr/src/app/generated
     ports:
