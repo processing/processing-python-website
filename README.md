@@ -8,7 +8,7 @@ This repository contains the files and executable code used to build
 
 To build this project, you need to have the following software installed:
 
-* Java (1.8+)
+* Java (1.8+) *Note: prior to [JEP 223](https://openjdk.org/jeps/223) Java version `X` was internally specified as `1.X` (so Java 1.8+ here means Java 8+)*
 * Python (2.7+, untested with Python 3)
 
 (Both `java` and `python` should be in your path.)
