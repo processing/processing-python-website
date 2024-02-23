@@ -14,7 +14,7 @@ services:
     volumes:
       - .:/usr/src/app
     command: >
-      sh -c "./fetch_processing_jar.sh"
+      sh -c "./fetch_processing_jar.sh /usr/src/app"
 
   site-build:
     image: processing-py-site

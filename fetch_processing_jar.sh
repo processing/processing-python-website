@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Define the target directory from the first script argument, default to current directory if not provided
+TARGET_DIR="${1:-.}"
+
 # Define global constants for URLs
 URL_LINUX64="https://py.processing.org/processing.py-linux64.tgz" 
 URL_LINUX32="https://py.processing.org/processing.py-linux32.tgz"
@@ -43,4 +46,4 @@ if [ -z "$URL" ]; then
 fi
 
 echo "Downloading Processing.py for $OS ($ARCH)"
-wget -O processing.py-archive "$URL" && tar -xvzf processing.py-archive -C /usr/src/app
+wget -O processing.py-archive "$URL" && tar -xvzf processing.py-archive -C "$TARGET_DIR"
