@@ -1,4 +1,4 @@
 [build]
   command = "python --version"
   publish = "generated"
-  command = "bash -c './fetch_processing_jar.sh && python generator.py build --all --images'"
+  command = "bash -c \"./fetch_processing_jar.sh && python generator.py build --all --images\""
