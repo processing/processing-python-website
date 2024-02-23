@@ -48,5 +48,8 @@ fi
 echo "Downloading Processing.py for $OS ($ARCH)"
 wget -O processing.py-archive "$URL" && tar -xvzf processing.py-archive -C "$TARGET_DIR"
 
+# Find the JAR file and rename it to processing-py.jar 
+find "$TARGET_DIR" -name 'processing-py*.jar' -exec mv {} "$TARGET_DIR/processing-py.jar" \;
+
 echo "Listing contents of $TARGET_DIR:"
 ls -l "$TARGET_DIR"
