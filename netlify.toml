@@ -1,4 +1,5 @@
 [build]
-  command = "python --version"
+  # Specify the build command you want to run
+  command = "bash -c './fetch_processing_jar.sh && python generator.py build --all --images'"
+  # Specify the directory that Netlify should publish
   publish = "generated"
-  command = "bash -c \"./fetch_processing_jar.sh && python generator.py build --all --images\""
