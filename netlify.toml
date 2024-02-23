@@ -1,0 +1,3 @@
+[build]
+  publish = "generated"
+  command = "bash -c './fetch_processing_jar.sh && python generator.py build --all --images'"
