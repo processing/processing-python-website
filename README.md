@@ -115,11 +115,11 @@ Two files are included for Docker configuration:
 
 - **`Dockerfile`**: Contains instructions for setting up the Docker environment.
 - **`docker-compose.yml`**: Defines services for managing the application lifecycle:
-  - `app`: Keeps the container running indefinitely, useful for debugging or running arbitrary commands.
+  - `build`: Build the container from the included Dockerfile
   - `fetch-jar`: Automatically downloads the appropriate Processing.py JAR file for image generation.
-  - `build-site`: Builds the static site without images.
-  - `build-all`: Builds the static site including images.
-  - `serve`: Serves the generated site using Python's built-in HTTP server on port 8080.
+  - `site-build`: Builds the static site without images.
+  - `site-build-all`: Builds the static site including images.
+  - `site-serve`: Serves the generated site using Python's built-in HTTP server on port 8080.
 
 #### Setup Instructions
 
