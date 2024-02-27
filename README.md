@@ -136,7 +136,7 @@ Two files are included for Docker configuration:
 - **Fetch Processing.py JAR** (if needed): 
   - Run `docker-compose run --rm fetch-jar` to automatically download the correct Processing.py JAR file for your architecture.
 - **Build the Site**: 
-  - Execute `docker-compose run --rm build-all` to build the entire site, including images. Use `docker-compose run --rm build-site` to build without images.
+  - Execute `docker-compose run --rm site-build-all` to build the entire site, including images. Use `docker-compose run --rm site-build` to build without images.
   - The `--rm` flag ensures the container is removed after completion.
 
 #### Serving the Site Locally
