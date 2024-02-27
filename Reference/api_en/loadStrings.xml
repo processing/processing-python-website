@@ -21,7 +21,7 @@ for line in lines:
 <example>
 	<noimage />
 <code><![CDATA[
-lines = loadStrings("http://processing.org/about/index.html")
+lines = loadStrings("https://processing.org/overview/index.html")
 print("there are %i lines" % len(lines))
 for line in lines:
     print(line)
