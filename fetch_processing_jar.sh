@@ -46,29 +46,39 @@ if [ -z "$URL" ]; then
 fi
 
 echo "Downloading Processing.py for $OS ($ARCH)"
-wget -O processing.py-archive "$URL" && tar -xvzf processing.py-archive -C "$TARGET_DIR"
+wget -O processing.py-archive "$URL"
 
-# Find the JAR file and rename it to processing-py.jar while moving it to the target directory
-find "$TARGET_DIR" -name 'processing-py.jar' -exec mv {} "$TARGET_DIR/processing-py.jar" \;
+# Create a temporary directory for extraction
+TEMP_DIR=$(mktemp -d)
 
-# Now, make the libraries available
-# Assuming the libraries are directly under the extracted "libraries/processing/" directory
-LIB_DIR="$TARGET_DIR/libraries/processing/"
+# Extract the archive to the temporary directory
+tar -xvzf processing.py-archive -C "$TEMP_DIR"
 
-# Check if the libraries directory exists, then move it to the target directory
-if [ -d "$LIB_DIR" ]; then
-  echo "Moving Processing libraries to the target directory"
-  # Move each library directory to the target directory
-  # If you prefer them in a specific subdirectory, adjust the target path accordingly
-  for lib in dxf io net opengl pdf serial video; do
-    if [ -d "$LIB_DIR/$lib" ]; then
-      mv "$LIB_DIR/$lib" "$TARGET_DIR/"
-      echo "Moved $lib library"
+# Find the top level processing.py-* directory
+BASE_DIR=$(find "$TEMP_DIR" -maxdepth 1 -type d -name 'processing.py-*' -print -quit)
+
+if [ -n "$BASE_DIR" ]; then
+    # Copy the processing-py.jar file to the target directory
+    if [ -f "$BASE_DIR/processing-py.jar" ]; then
+        cp "$BASE_DIR/processing-py.jar" "$TARGET_DIR/"
     fi
-  done
+
+    # Copy the contents of the libraries directory to $TARGET_DIR/libraries
+    if [ -d "$BASE_DIR/libraries/processing" ]; then
+        echo "Copying libraries from $BASE_DIR/libraries/processing/ to $TARGET_DIR/libraries/"
+        # Ensure the target libraries directory exists
+        mkdir -p "$TARGET_DIR/libraries"
+        cp -r "$BASE_DIR/libraries/processing/." "$TARGET_DIR/libraries/"
+    fi
+    # log the contents of the $TARGET_DIR/libraries/ directory
+    echo "Listing contents of $TARGET_DIR/libraries/:"
+    ls -l "$TARGET_DIR/libraries/"
 else
-  echo "Libraries directory not found: $LIB_DIR"
+    echo "The expected top level directory was not found in the archive."
 fi
+
+# Clean up: Remove the temporary directory
+rm -rf "$TEMP_DIR"
 
 echo "Listing contents of $TARGET_DIR:"
 ls -l "$TARGET_DIR"
