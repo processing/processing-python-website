@@ -41,7 +41,7 @@ elif [ "$OS" == "Windows" ]; then
 fi
 
 if [ -z "$URL" ]; then
-    echo "Unsupported OS or architecture: $OS $ARCH" >&2
+    echo "Unsupported OS or architecture: There is no Processing.py build for $OS $ARCH" >&2
     exit 1
 fi
 
