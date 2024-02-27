@@ -55,24 +55,20 @@ TEMP_DIR=$(mktemp -d)
 tar -xvzf processing.py-archive -C "$TEMP_DIR"
 
 # Find the top level processing.py-* directory
-BASE_DIR=$(find "$TEMP_DIR" -maxdepth 1 -type d -name 'processing.py-*' -print -quit)
+TOP_LEVEL_DIR=$(find "$TEMP_DIR" -maxdepth 1 -type d -name 'processing.py-*' -print -quit)
 
-if [ -n "$BASE_DIR" ]; then
+if [ -n "$TOP_LEVEL_DIR" ]; then
     # Copy the processing-py.jar file to the target directory
-    if [ -f "$BASE_DIR/processing-py.jar" ]; then
-        cp "$BASE_DIR/processing-py.jar" "$TARGET_DIR/"
+    if [ -f "$TOP_LEVEL_DIR/processing-py.jar" ]; then
+        cp "$TOP_LEVEL_DIR/processing-py.jar" "$TARGET_DIR/"
     fi
 
-    # Copy the contents of the libraries directory to $TARGET_DIR/libraries
-    if [ -d "$BASE_DIR/libraries/processing" ]; then
-        echo "Copying libraries from $BASE_DIR/libraries/processing/ to $TARGET_DIR/libraries/"
-        # Ensure the target libraries directory exists
-        mkdir -p "$TARGET_DIR/libraries"
-        cp -r "$BASE_DIR/libraries/processing/." "$TARGET_DIR/libraries/"
+    # Copy the contents of the libraries directory to $TARGET_DIR/libraries/processing
+    if [ -d "$TOP_LEVEL_DIR/libraries/processing" ]; then
+        # Ensure the target libraries/processing directory exists
+        mkdir -p "$TARGET_DIR/libraries/processing"
+        cp -r "$TOP_LEVEL_DIR/libraries/processing/." "$TARGET_DIR/libraries/processing/"
     fi
-    # log the contents of the $TARGET_DIR/libraries/ directory
-    echo "Listing contents of $TARGET_DIR/libraries/:"
-    ls -l "$TARGET_DIR/libraries/"
 else
     echo "The expected top level directory was not found in the archive."
 fi
@@ -80,5 +76,5 @@ fi
 # Clean up: Remove the temporary directory
 rm -rf "$TEMP_DIR"
 
-echo "Listing contents of $TARGET_DIR:"
-ls -l "$TARGET_DIR"
+echo "Listing contents of $TARGET_DIR/libraries/processing:"
+ls -l "$TARGET_DIR/libraries/processing"
