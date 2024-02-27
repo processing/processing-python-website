@@ -51,5 +51,24 @@ wget -O processing.py-archive "$URL" && tar -xvzf processing.py-archive -C "$TAR
 # Find the JAR file and rename it to processing-py.jar while moving it to the target directory
 find "$TARGET_DIR" -name 'processing-py.jar' -exec mv {} "$TARGET_DIR/processing-py.jar" \;
 
+# Now, make the libraries available
+# Assuming the libraries are directly under the extracted "libraries/processing/" directory
+LIB_DIR="$TARGET_DIR/libraries/processing/"
+
+# Check if the libraries directory exists, then move it to the target directory
+if [ -d "$LIB_DIR" ]; then
+  echo "Moving Processing libraries to the target directory"
+  # Move each library directory to the target directory
+  # If you prefer them in a specific subdirectory, adjust the target path accordingly
+  for lib in dxf io net opengl pdf serial video; do
+    if [ -d "$LIB_DIR/$lib" ]; then
+      mv "$LIB_DIR/$lib" "$TARGET_DIR/"
+      echo "Moved $lib library"
+    fi
+  done
+else
+  echo "Libraries directory not found: $LIB_DIR"
+fi
+
 echo "Listing contents of $TARGET_DIR:"
 ls -l "$TARGET_DIR"
