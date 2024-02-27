@@ -42,6 +42,8 @@ fi
 
 if [ -z "$URL" ]; then
     echo "Unsupported OS or architecture: There is no Processing.py build for $OS $ARCH" >&2
+    echo "Supported OS: Linux, Mac, Windows" >&2
+    echo "Supported architectures: x86_64, i386, i686" >&2
     exit 1
 fi
 
