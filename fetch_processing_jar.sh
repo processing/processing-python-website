@@ -57,24 +57,15 @@ tar -xvzf processing.py-archive -C "$TEMP_DIR"
 # Find the top level processing.py-* directory
 TOP_LEVEL_DIR=$(find "$TEMP_DIR" -maxdepth 1 -type d -name 'processing.py-*' -print -quit)
 
+# Copy all contents from the directory to the target directory
 if [ -n "$TOP_LEVEL_DIR" ]; then
-    # Copy the processing-py.jar file to the target directory
-    if [ -f "$TOP_LEVEL_DIR/processing-py.jar" ]; then
-        cp "$TOP_LEVEL_DIR/processing-py.jar" "$TARGET_DIR/"
-    fi
-
-    # Copy the contents of the libraries directory to $TARGET_DIR/libraries/processing
-    if [ -d "$TOP_LEVEL_DIR/libraries/processing" ]; then
-        # Ensure the target libraries/processing directory exists
-        mkdir -p "$TARGET_DIR/libraries/processing"
-        cp -r "$TOP_LEVEL_DIR/libraries/processing/." "$TARGET_DIR/libraries/processing/"
-    fi
+    cp -r "$TOP_LEVEL_DIR/"* "$TARGET_DIR/"
 else
     echo "The expected top level directory was not found in the archive."
 fi
 
-# Clean up: Remove the temporary directory
-rm -rf "$TEMP_DIR"
+# Clean up: Remove the temporary directory and archive
+rm -rf "$TEMP_DIR" processing.py-archive
 
-echo "Listing contents of $TARGET_DIR/libraries/processing:"
-ls -l "$TARGET_DIR/libraries/processing"
+echo "Listing contents of $TARGET_DIR:"
+ls -l "$TARGET_DIR"
