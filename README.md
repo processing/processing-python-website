@@ -87,13 +87,22 @@ As noted above, the `generator.py` script builds the site from the source
 files in the repository. Run `python generator.py --help` for full details on
 its command line options. Here's an overview:
 
-To build all content:
+To build all content, using the committed example images:
+
+    python generator.py build --all
+
+This is what Netlify runs. It needs neither Java nor the Processing JAR.
+
+The images for reference examples are committed in `Reference/api_en/imgs`.
+`fingerprints.json` in that folder records the example code each image was made
+from. If you change an example's code, the build fails until you regenerate its
+image with `--images` and commit the new PNG and `fingerprints.json`:
+
+    python generator.py build --images --files a.xml
+
+To regenerate every example image:
 
     python generator.py build --all --images
-
-To build the site without performing the image generation process:
-
-    python generator.py build
 
 To build only `a.xml`, `b.xml` and `c.xml` files from the reference (remove
 `--images` to skip the image generation process):

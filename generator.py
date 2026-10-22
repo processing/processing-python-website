@@ -12,6 +12,8 @@ import shutil
 import distutils.core
 import sys
 import copy
+import hashlib
+import json
 import cgi
 import time, datetime
 
@@ -34,6 +36,9 @@ target_tutorials_dir = target_dir + canon_tutorials_dir
 target_cover_dir     = target_dir + canon_cover_dir
 target_examples_dir  = target_dir + canon_examples_dir
 reference_dir='Reference/api_en/'
+# Example images are committed so that builds don't need to run sketches.
+source_img_dir = os.path.join(src_dir, reference_dir, 'imgs')
+fingerprints_path = os.path.join(source_img_dir, 'fingerprints.json')
 tutorials_dir='Tutorials/'
 
 # files in the reference matching these regexps will not be built or included
@@ -230,6 +235,11 @@ def generate_images(items_dict, to_update, src_dir, processing_py_jar,
     print("Exists:", os.path.exists(processing_py_jar_path))
     print("Permissions:", oct(os.stat(processing_py_jar_path).st_mode)[-3:])
 
+    for workitem in workitems.itervalues():
+        if os.path.exists(workitem['imagefile']):
+            # A failed run must not leave the old image behind.
+            os.remove(workitem['imagefile'])
+
     # TODO: use the multiprocessing module's Pool class to run multiple
     # instances of this at once
     generated, failed = image_worker(base_cmd, workitems) 
@@ -245,26 +255,62 @@ def generate_images(items_dict, to_update, src_dir, processing_py_jar,
     print("Done rendering examples.")
     return len(failed)
 
-def find_images(items_dict, to_update, img_dir):
+def code_fingerprint(code):
+    if isinstance(code, unicode):
+        code = code.encode('utf-8')
+    return hashlib.sha1(code).hexdigest()
+
+def load_fingerprints():
+    if not os.path.exists(fingerprints_path):
+        return {}
+    with open(fingerprints_path) as f:
+        return json.load(f)
+
+def record_fingerprints(items_dict, to_update, img_dir):
+    '''Record the example code behind each image, and delete images no page shows.'''
+    fingerprints = load_fingerprints()
     for name in to_update:
-        item = items_dict[name]
-        for number, example in enumerate(item.examples):
+        for number, example in enumerate(items_dict[name].examples):
             example_filename = name + str(number) + '.png'
             example_path = os.path.join(img_dir, example_filename)
-            if example['image']:
-                if os.path.exists(example_path):
-                    # UPDATE THIS if the image directory changes!
-                    example['image'] = canon_reference_dir + 'imgs/' + example_filename
-                else:
-                    # We want an image, but we don't have one. hm.
-                    del example['image']
-                    example['broken'] = True
+            if example['image'] and example['run'] and os.path.exists(example_path):
+                fingerprints[example_filename] = code_fingerprint(example['code'])
             else:
+                fingerprints.pop(example_filename, None)
                 if os.path.exists(example_path):
                     # So, we run all example sketches as a kind of unit-test, and they all save images,
                     # but some of those images don't actually need to be drawn. This is one of those
                     # images.
                     os.remove(example_path)
+    with open(fingerprints_path, 'w') as f:
+        json.dump(fingerprints, f, indent=0, sort_keys=True, separators=(',', ': '))
+        f.write('\n')
+
+def find_images(items_dict, to_update, img_dir, target_img_dir):
+    '''Copy committed images into the site and return how many are missing or stale.'''
+    fingerprints = load_fingerprints()
+    stale = 0
+    for name in to_update:
+        for number, example in enumerate(items_dict[name].examples):
+            if not example['image']:
+                continue
+            example_filename = name + str(number) + '.png'
+            example_path = os.path.join(img_dir, example_filename)
+            if not example['run']:
+                # Interactive sketches can't be run, so they never get an image.
+                del example['image']
+                example['broken'] = True
+            elif (fingerprints.get(example_filename) != code_fingerprint(example['code'])
+                    or not os.path.exists(example_path)):
+                print_error('{}: example code has no matching image; rebuild with --images'.format(example_filename))
+                del example['image']
+                example['broken'] = True
+                stale += 1
+            else:
+                shutil.copy(example_path, target_img_dir)
+                # UPDATE THIS if the image directory changes!
+                example['image'] = canon_reference_dir + 'imgs/' + example_filename
+    return stale
 
 def make_convert_hypertext(names_dict):
     """
@@ -330,8 +376,11 @@ def build_reference(reference_dir, to_update, env, build_images):
         os.makedirs(target_img_dir)
 
     if build_images:
-        failures += generate_images(items_dict, to_update, src_dir, "./processing-py.jar", target_img_dir)
-    find_images(items_dict, to_update, target_img_dir)
+        if not os.path.exists(source_img_dir):
+            os.makedirs(source_img_dir)
+        failures += generate_images(items_dict, to_update, src_dir, "./processing-py.jar", source_img_dir)
+        record_fingerprints(items_dict, to_update, source_img_dir)
+    failures += find_images(items_dict, to_update, source_img_dir, target_img_dir)
 
     reference_template = env.get_template("reference_item_template.jinja")
     convert_hypertext = make_convert_hypertext(items_dict)
