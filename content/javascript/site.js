@@ -4,9 +4,10 @@ $(function(){
 	if(!Modernizr.touch){
 		$(window).scroll(function(){
 			if($(this).scrollTop() < 114){
-				$('.navBar').removeClass('stuck')
+				$('.navBar').removeClass('stuck').css('top', '')
 			} else {
-				$('.navBar').addClass('stuck')
+				// keep the menu below the sticky deprecation banner
+				$('.navBar').addClass('stuck').css('top', $('#deprecation-banner').outerHeight() + 20)
 			}
 		})
 	}
