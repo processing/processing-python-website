@@ -4,11 +4,11 @@
 TARGET_DIR="${1:-.}"
 
 # Define global constants for URLs
-URL_LINUX64="https://py.processing.org/processing.py-linux64.tgz" 
-URL_LINUX32="https://py.processing.org/processing.py-linux32.tgz"
-URL_MAC="https://py.processing.org/processing.py-macosx.tgz"
-URL_WINDOWS64="https://py.processing.org/processing.py-windows64.zip"
-URL_WINDOWS32="https://py.processing.org/processing.py-windows32.zip"
+URL_LINUX64="https://contribs.processing.org/pythonmode/processing.py-linux64.tgz" 
+URL_LINUX32="https://contribs.processing.org/pythonmode/processing.py-linux32.tgz"
+URL_MAC="https://contribs.processing.org/pythonmode/processing.py-macosx.tgz"
+URL_WINDOWS64="https://contribs.processing.org/pythonmode/processing.py-windows64.zip"
+URL_WINDOWS32="https://contribs.processing.org/pythonmode/processing.py-windows32.zip"
 
 # Detect the operating system
 OS="unknown"
