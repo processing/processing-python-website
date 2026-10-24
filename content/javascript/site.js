@@ -12,6 +12,13 @@ $(function(){
 		})
 	}
 
+	// count clicks on the deprecation banner's "Read more" link
+	$('#deprecation-banner a').on('click', function(){
+		if(window.fathom){
+			window.fathom.trackEvent('Click on deprecation banner "read more" link')
+		}
+	})
+
 	// if on the homepage, gather recent tweets/commits
 	if($('body').attr('id')=='Cover'){
 
